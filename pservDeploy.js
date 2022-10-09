@@ -1,12 +1,18 @@
 /** @param {NS} ns */
+import { main as deepscan } from "lib/deepscan.js"
+
 export async function main(ns) {
-	let servers = ns.scan("home")
+	let servers = await deepscan(ns)
 	servers.forEach((server) => {
 		// Assumption is that your script is in the home directory
 		let reqMem = ns.getScriptRam("hack.script");
 		let availMem = ns.getServerMaxRam(server);
 		let threads = Math.floor(availMem / reqMem);
-		ns.scp("hack.script", server);
-		ns.exec("hack.script", server, threads);
+		if (server === "home") {
+			ns.run("hack.script", threads - 4)
+		} else {
+			ns.scp("hack.script", server);
+			ns.exec("hack.script", server, threads);
+		}
 	});
 }
