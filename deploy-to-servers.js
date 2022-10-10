@@ -12,7 +12,7 @@ export async function main(ns) {
 		let threads = Math.floor(availMem / reqMem);
 		if (server === "home") {
 			ns.run("hack.script", threads - 4)
-		} else {
+		} else if (availMem !== 0) {
 			ns.scp("hack.script", server);
 			ns.exec("hack.script", server, threads);
 		}
